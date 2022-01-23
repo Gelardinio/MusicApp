@@ -1,3 +1,4 @@
 /Backend/node_modules
 /MusicApp/node_modules
-
+/Backend/.env
+/MusicApp/.env
