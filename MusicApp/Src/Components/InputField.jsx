@@ -17,6 +17,7 @@ const styles = StyleSheet.create({
 const InputField = (props) => {
     return (
         <TextInput 
+            {...props}
             style={styles.inputStyle} 
             placeholder={props.placeholder} 
         />
