@@ -11,6 +11,9 @@ module.exports = async (req , res) => {
             `SELECT * FROM person WHERE username = '${username}' FETCH FIRST 1 ROWS ONLY`
         )
 
+        console.log(username)
+        console.log(password)
+
         if (exists.rowCount < 1) {
             res.status(401).send('Error!');
             throw new Error("Error!")
@@ -22,7 +25,7 @@ module.exports = async (req , res) => {
             res.status(401).send('Error!');
             throw new Error("Error!")           
         }
-        
+
         const token = await jwt.sign(
             {
                 username: exists.rows[0].username

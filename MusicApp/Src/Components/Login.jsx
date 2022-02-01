@@ -4,6 +4,8 @@ import Button from './Button';
 import axios from 'axios';
 import InputField from './InputField';
 import * as SecureStore from 'expo-secure-store';
+import { useNavigate } from "react-router-native";
+
 
 const styles = StyleSheet.create({
     titleText: {
@@ -16,14 +18,24 @@ const styles = StyleSheet.create({
 const Login = (props) => {
     const [username, onChangeUsername] = React.useState("");
     const [password, onChangePassword] = React.useState("");
+    const navigate = useNavigate();
 
     async function saveJWT(key, value) {
         await SecureStore.setItemAsync(key, value);
     }
 
     const handleLogin = async (username, password) => {
-        const response = await axios.post("http://localhost:3001/api/v1/login", {"username": `${username}`,"password": `${password}`})
-        saveJWT("bearer", response.data.data);
+        await axios.post("http://localhost:3001/api/v1/login", {"username": `${username}`,"password": `${password}`})
+            .then ( res => {
+                saveJWT("bearer", res.data)
+                    .catch(function (err) {
+                        console.log(err)
+                    })
+                navigate('/mainPage');
+            })
+            .catch(function (err) {
+                console.log(err)
+            }) 
     };
 
     return (
