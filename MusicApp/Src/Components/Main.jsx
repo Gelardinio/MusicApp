@@ -1,8 +1,7 @@
 import { Text, StyleSheet, View } from 'react-native';
 import Login from './Login';
+import SignUp from './Signup';
 import { NativeRouter, Switch, Route, Routes } from 'react-router-native';
-import * as SecureStore from 'expo-secure-store';
-import { useNavigate } from "react-router-native";
 
 import MainPage from './MainPage';
 
@@ -15,24 +14,14 @@ const styles = StyleSheet.create({
     },
 });
 
-const determinePage = async () => {
-    const navigate = useNavigate();
-    const res = await SecureStore.getItemAsync("bearer")
-    //const del = await SecureStore.deleteItemAsync("bearer")
-    if (!res) {
-        navigate('/login');
-    }
-}
-
 const Main = () => {
-
-    determinePage();
 
     return (
         <View style={styles.container}>
             <Routes>
-                <Route path="/login" element={<Login/>} exact />
-                <Route path="/" element={<MainPage />} exact />
+                <Route path="/" element={<Login/>} exact />
+                <Route path="/mainPage" element={<MainPage />} exact />
+                <Route path="/signUp" element={<SignUp />} exact />
             </Routes>
         </View>
     )

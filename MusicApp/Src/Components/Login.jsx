@@ -20,6 +20,18 @@ const Login = (props) => {
     const [password, onChangePassword] = React.useState("");
     const navigate = useNavigate();
 
+    const determinePage = async () => {
+        const navigate = useNavigate();
+        const res = await SecureStore.getItemAsync("bearer")
+        await SecureStore.deleteItemAsync("bearer")
+        console.log("bruh")
+        if (res) {
+            navigate('/mainPage');
+        }
+    }
+
+    determinePage();
+
     async function saveJWT(key, value) {
         await SecureStore.setItemAsync(key, value);
     }
@@ -38,6 +50,10 @@ const Login = (props) => {
             }) 
     };
 
+    const redirSign = () => {
+        navigate('/signUp');
+    }
+
     return (
         <>
             <Text style={styles.titleText}>Connecitfy</Text>
@@ -52,7 +68,7 @@ const Login = (props) => {
                 onChangeText={password => onChangePassword(password)}
                 secureTextEntry={true}/>
             <Button text="Log In" pressFunc={() => handleLogin(username, password)}></Button>
-            <Button text="Sign Up"></Button>
+            <Button text="Sign Up" pressFunc={() => redirSign()}></Button>
         </>
     )  
 };
