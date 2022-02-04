@@ -31,6 +31,7 @@ const Button = (props) => {
                 backgroundColor: pressed ? 'black' : 'orange',
             },
             styles.button,
+            props.extraStyles
         ]}
         onPress={props.pressFunc}
         >

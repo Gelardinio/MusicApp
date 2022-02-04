@@ -14,6 +14,8 @@ const styles = StyleSheet.create({
     },
 });
 
+
+
 const Main = () => {
 
     return (
