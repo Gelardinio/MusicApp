@@ -5,25 +5,29 @@ const bcrypt = require('bcrypt');
 module.exports = async (req , res) => {
     let {username, password, firstName, lastName, email, gender, dateOfBirth, country} = req.body;
 
-    try {
-        const exists = await pool.query(
-            `SELECT * FROM person WHERE email = '${email}' OR username = ${username} FETCH FIRST 1 ROWS ONLY`
-        )
+    const exists = await pool.query(
+        `SELECT * FROM person WHERE email = '${email}' OR username = '${username}'`
+    )
+    console.log(username, email)
 
-        if (exists.rowCount > 0) {
-            res.status(401).send('User already exists!');
-            throw new Error("User already exists!")
+    if (exists.rowCount > 0) {
+        res.status(401).send('User already exists!');
+        console.log("Already exists!")
+    } else {
+        try {
+
+            password = await bcrypt.hash(req.body.password, 12);
+            
+            await pool.query(
+                `INSERT INTO person (username, password, first_name, last_name, email, gender, date_of_birth, country) values 
+                ('${username}', '${password}', '${firstName}', '${lastName}', '${email}', '${gender}', '${dateOfBirth}', '${country}')`
+            )
+            res.status(200).send('User created!');
+            console.log("created!")
+        } catch (err) {
+            console.log("error")
+            res.status(401).send('Error!');
         }
-
-        password = await bcrypt.hash(req.body.password, 12);
-
-        const currTables = await pool.query(
-            `INSERT INTO person (username, password, first_name, last_name, email, gender, date_of_birth, country) values 
-            ('${username}', '${password}', '${firstName}', '${lastName}', '${email}', '${gender}', '${dateOfBirth}', '${country}')`
-        )
-        res.status(200).send('User created!');
-    } catch (err) {
-        console.log(err.message);
-        res.status(401).send('Error!');
     }
+
 };

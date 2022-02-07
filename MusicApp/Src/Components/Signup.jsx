@@ -53,16 +53,31 @@ const SignUp = (props) => {
         );
 
     const handleSignUp = async (username, password, firstName, lastName, email, gender, dateOfBirth, country) => {
-        const payLoad = {
-            "username": `${username}`,
-            "password": `${password}`,
-            "firstName": `${firstName}`,
-            "lastName": `${lastName}`,
-            "email": `${email}`,
-            "gender": `${gender}`,
-            "dateOfBirth": `${dateOfBirth}`,
-            "country": `${country}`
+
+        let isValid = true;
+        isValid &= username.length > 5;
+        isValid &= password.length > 5;
+        isValid &= cPassword == password;
+        isValid &= firstName != "";
+        isValid &= lastName != "";
+        isValid &= email.length > 5;
+        isValid &= gender != "";
+        isValid &= country != "";
+        if (!isValid) {
+            return
         }
+        const payLoad = {} 
+        payLoad["username"] = username
+        payLoad["password"] = password
+        payLoad["firstName"] = firstName
+        payLoad["lastName"] = lastName
+        payLoad["email"] = email
+        payLoad["gender"] = gender
+        payLoad["dateOfBirth"] = dateOfBirth
+        payLoad["country"] = country
+
+        console.log(username)
+        
         await axios.post("http://localhost:3001/api/v1/signup", payLoad)
             .then ( res => {
                 console.log(res.data)
@@ -72,22 +87,7 @@ const SignUp = (props) => {
                 console.log(err)
             }) 
     };
-
-    const validateSignUp = (username, password, cPassword, firstName, lastName, email, gender, country) => {
-        let isValid = true;
-        isValid &= username.length > 5;
-        isValid &= password.length > 5;
-        isValid &= cPassword == password;
-        isValid &= firstName.length > 5;
-        isValid &= lastName.length > 5;
-        isValid &= email.length > 5;
-        isValid &= gender != "";
-        isValid &= country != "";
-        return isValid;
-    }
-
-    const isValid = validateSignUp(username, password, cPassword, firstName, lastName, email, gender, country);
-
+    
     return (
         <>
             <Text style={styles.titleText}>Sign Up</Text>
@@ -99,9 +99,7 @@ const SignUp = (props) => {
             <InputField placeholder="Email" value={email} onChangeText={email => onChangeEmail(email)} />
             <Button text={gender} pressFunc={onPress} extraStyles={{width: 300}}></Button>
             <DateTimePicker testID="dateTimePicker" value={dateOfBirth} mode={'date'} display="default" style={{width:100}} onChange={onChange}/>
-            {isValid && (
-                <Button text="Sign Up" pressFunc={() => handleSignUp(username, password, firstName, lastName, email, gender, dateOfBirth, country)}></Button>
-            )}
+            <Button text="Sign Up" pressFunc={() => handleSignUp(username, password, firstName, lastName, email, gender, dateOfBirth, country)}></Button>
         </>
     ) 
 

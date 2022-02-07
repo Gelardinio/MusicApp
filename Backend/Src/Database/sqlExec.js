@@ -31,5 +31,5 @@ async function createUser() {
     pool.end()
 }
 
-genUserTable();
-//createUser();
+//genUserTable();
+createUser();
