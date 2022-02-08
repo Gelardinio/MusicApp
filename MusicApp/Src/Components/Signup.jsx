@@ -27,6 +27,7 @@ const SignUp = (props) => {
     const [gender, onChangeGender] = React.useState("Gender");
     const [dateOfBirth, onChangeDate] = React.useState(new Date('December 20, 1995'));
     const [country, onChangeCountry] = React.useState("Canada");
+    const navigate = useNavigate();
 
     const onChange = (event, selectedDate) => {
         const currentDate = selectedDate || dateOfBirth;

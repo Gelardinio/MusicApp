@@ -23,8 +23,6 @@ const Login = (props) => {
     const determinePage = async () => {
         const navigate = useNavigate();
         const res = await SecureStore.getItemAsync("bearer")
-        await SecureStore.deleteItemAsync("bearer")
-        console.log("bruh")
         if (res) {
             navigate('/mainPage');
         }
