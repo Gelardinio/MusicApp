@@ -5,7 +5,9 @@ import axios from 'axios';
 import InputField from './InputField';
 import * as SecureStore from 'expo-secure-store';
 import { useNavigate } from "react-router-native";
+import global from '../../global'
 
+const jwtDecode = require('jwt-decode');
 
 const styles = StyleSheet.create({
     titleText: {
@@ -24,6 +26,11 @@ const Login = (props) => {
         const navigate = useNavigate();
         const res = await SecureStore.getItemAsync("bearer")
         if (res) {
+            try {
+                global.username = jwtDecode(res).username
+            } catch (e) {
+                console.log(e)
+            }
             navigate('/mainPage');
         }
     }
@@ -37,6 +44,7 @@ const Login = (props) => {
     const handleLogin = async (username, password) => {
         await axios.post("http://localhost:3001/api/v1/login", {"username": `${username}`,"password": `${password}`})
             .then ( res => {
+                global.username = username;
                 saveJWT("bearer", res.data)
                     .catch(function (err) {
                         console.log(err)
