@@ -5,6 +5,11 @@ import Logout from './Logout';
 import * as Location from 'expo-location';
 import MapMarker from "./MapMarker";
 import global from '../../global'
+import AuthLogin from "./AuthLogin";
+import { makeRedirectUri } from 'expo-auth-session';
+import * as SecureStore from 'expo-secure-store';
+import axios from 'axios';
+
 
 const styles = StyleSheet.create({
     container: {
@@ -24,6 +29,58 @@ const MainMap = () => {
     const [errorMsg, setErrorMsg] = React.useState(null);
     const [longitude, setLongitude] = React.useState(0);
     const [latitude, setLatitude] = React.useState(0);
+    const [profile, setProfile] = React.useState("//");
+    const [play, setPlay] = React.useState("");
+
+    const getUsername = async (token) => {
+      await axios.get("https://api.spotify.com/v1/me", {headers: {'Authorization': `Bearer ${token}`}})
+          .then ( res => {
+              console.log(res.data.images[0].url)
+              setProfile(res.data.images[0].url)
+              global.spotifyUsername = res.data.display_name
+          })
+          .catch(function (err) {
+              console.log("ERROR" + err)
+          }) 
+      };
+
+      const getCurrPlaying = async (token) => {
+        await axios.get("https://api.spotify.com/v1/me/player/currently-playing", {headers: {'Authorization': `Bearer ${token}`}})
+            .then ( res => {
+                setPlay(res.data.item.album.name)
+            })
+            .catch(function (err) {
+                console.log("ERROR" + err)
+            }) 
+        };
+
+        React.useEffect(() => {
+          setInterval(() => {
+            (async () => {
+              const res = await SecureStore.getItemAsync("token")
+              if (res) {
+                  try {
+                      await getCurrPlaying(res)
+                  } catch (e) {
+                      console.log(e)
+                  }
+              }
+            })();
+          }, 1000);
+        }, []);
+
+      React.useEffect(() => {
+        (async () => {
+          const res = await SecureStore.getItemAsync("token")
+          if (res) {
+              try {
+                  await getUsername(res)
+              } catch (e) {
+                  console.log(e)
+              }
+          }
+        })();
+      }, []);
 
     React.useEffect(() => {
       (async () => {
@@ -44,10 +101,11 @@ const MainMap = () => {
     return (
         <>
             <MapView style={styles.map}>
-                <MapMarker longitude={longitude} latitude={latitude} username={global.username} imPath={require('../../assets/icon.png')}></MapMarker>
-                
+                <MapMarker longitude={longitude} latitude={latitude} username={global.username} imPath={{uri: profile}} playing={play}></MapMarker>
             </MapView>
+            <AuthLogin />
             <Logout />
+            
         </>
     )
 };

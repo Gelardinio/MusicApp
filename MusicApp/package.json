@@ -23,7 +23,9 @@
     "react-native": "0.64.3",
     "react-native-maps": "0.29.4",
     "react-native-web": "0.17.1",
-    "react-router-native": "^6.2.1"
+    "react-router-native": "^6.2.1",
+    "expo-auth-session": "~3.5.0",
+    "expo-random": "~12.1.1"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"

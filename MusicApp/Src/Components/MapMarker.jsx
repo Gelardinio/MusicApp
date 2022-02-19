@@ -28,6 +28,7 @@ const MapMarker = (props) => {
                 <Callout>
                     <View style={styles.container}>
                         <Text>Username: {props.username}</Text>
+                        <Text>Playing: {props.playing}</Text>
                         <Image
                             style={styles.image}
                             source={props.imPath}
