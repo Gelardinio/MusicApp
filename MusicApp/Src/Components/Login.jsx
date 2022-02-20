@@ -27,9 +27,10 @@ const Login = (props) => {
         const res = await SecureStore.getItemAsync("bearer")
         if (res) {
             try {
-                global.username = jwtDecode(res).username
+                global.username = jwtDecode(res).username;
+                global.id = jwtDecode(res).id;
             } catch (e) {
-                console.log(e)
+                console.log(e);
             }
             navigate('/mainPage');
         }
@@ -49,7 +50,8 @@ const Login = (props) => {
                     .catch(function (err) {
                         console.log(err)
                     })
-                navigate('/mainPage');
+                determinePage();
+                //navigate('/mainPage');
             })
             .catch(function (err) {
                 console.log(err)

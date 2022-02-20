@@ -1,13 +1,12 @@
 const login = require("./Routes/login");
 const signup = require("./Routes/signup");
+const insertPerson = require("./Routes/insertPerson");
 const express = require('express');
 const pool = require("./Database/db");
-const backend = express()
+const backend = express();
 
-const http = require('http');
-const server = http.createServer(backend);
-const { Server } = require("socket.io");
-const io = new Server(server);
+const httpServer = require("http").createServer(backend);
+const io = require("socket.io")(httpServer);
 
 require('dotenv').config();
 
@@ -19,15 +18,27 @@ backend.get('/', (req, res) => {
 
 backend.post('/api/v1/login', login);
 backend.post('/api/v1/signup', signup);
+backend.post('/api/v1/insertPerson', insertPerson);
 
 const PORT = process.env.PORT;
 
 io.on('connection', (socket) => {
-    console.log('a user connected');
-});  
+    console.log("bruh")
+    socket.emit("welcome", "Connected to socket!");
+});
 
-backend.listen(PORT, () => {
+io.on('connect_failed', function(){
+    console.log('Connection Failed');
+});
+
+io.on('disconnect', function () {
+    console.log("User Disconnected!");
+})
+
+httpServer.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 }).on('error', (e) => {
     console.log('Error: ', e.message);
 });
+
+

@@ -20,6 +20,23 @@ async function genUserTable() {
     }
 }
 
+async function genActiveTable() {
+    try {
+        const userTable = await pool.query(
+            `CREATE TABLE activeUsers (
+                id BIGSERIAL NOT NULL PRIMARY KEY,
+                username VARCHAR(40) NOT NULL,
+                song_id VARCHAR(40) NOT NULL,
+                CONSTRAINT fk_Person FOREIGN KEY(id)
+                REFERENCES person(id)
+            )`
+        )
+    } catch (err) {
+        console.log(err.message);
+    }
+}
+
+
 async function createUser() {
     try {
         await pool.query(
@@ -32,4 +49,5 @@ async function createUser() {
 }
 
 //genUserTable();
-createUser();
+//createUser();
+genActiveTable();
