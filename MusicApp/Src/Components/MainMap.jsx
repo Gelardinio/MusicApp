@@ -36,7 +36,7 @@ const MainMap = () => {
       await axios.get("https://api.spotify.com/v1/me", {headers: {'Authorization': `Bearer ${token}`}})
           .then ( res => {
               console.log(res.data.images[0].url)
-              setProfile(res.data.images[0].url)
+              setProfile(res.data.images[2].url)
               global.spotifyUsername = res.data.display_name
           })
           .catch(function (err) {
@@ -44,30 +44,17 @@ const MainMap = () => {
           }) 
       };
 
-      const getCurrPlaying = async (token) => {
-        await axios.get("https://api.spotify.com/v1/me/player/currently-playing", {headers: {'Authorization': `Bearer ${token}`}})
-            .then ( res => {
-                setPlay(res.data.item.album.name)
-            })
-            .catch(function (err) {
-                console.log("ERROR" + err)
-            }) 
-        };
+    const getCurrPlaying = async (token) => {
+      await axios.get("https://api.spotify.com/v1/me/player/currently-playing", {headers: {'Authorization': `Bearer ${token}`}})
+          .then ( res => {
+            //console.log("bruh")
+            setProfile(res.data.item.album.images[0].url)
+            setPlay((res.data.item.name).substring(0, 15))
+          })
+          .catch(function (err) {
 
-        React.useEffect(() => {
-          setInterval(() => {
-            (async () => {
-              const res = await SecureStore.getItemAsync("token")
-              if (res) {
-                  try {
-                      await getCurrPlaying(res)
-                  } catch (e) {
-                      console.log(e)
-                  }
-              }
-            })();
-          }, 1000);
-        }, []);
+          }) 
+      };
 
       React.useEffect(() => {
         (async () => {
@@ -80,6 +67,21 @@ const MainMap = () => {
               }
           }
         })();
+      }, []);
+
+     React.useEffect(() => {
+        setInterval(() => {
+          (async () => {
+            const res = await SecureStore.getItemAsync("token")
+            if (res) {
+                try {
+                    await getCurrPlaying(res)
+                } catch (e) {
+
+                }
+            }
+          })();
+        }, 1000);
       }, []);
 
     React.useEffect(() => {
