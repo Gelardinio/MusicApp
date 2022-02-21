@@ -96,6 +96,13 @@ const MainMap = () => {
         if (location) {
           setLatitude(location.coords.latitude)
           setLongitude(location.coords.longitude)
+          await axios.post("http://localhost:3001/api/v1/insertPerson", {'userId': 1, 'spotifyId': `asdf`, 'longitude': `${longitude}`, 'latitude': `${latitude}`})
+            .then ( res => {
+                console.log("SENT")
+            })
+            .catch(function (err) {
+              console.log("NO")
+            }) 
         }
       })();
     }, []);

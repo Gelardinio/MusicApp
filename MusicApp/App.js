@@ -8,9 +8,15 @@ export default function App() {
 
   const socket = io.connect("http://localhost:3001");
 
+  socket.on("newJoin", (data) => {
+    console.log(data.id)
+  })
+
   socket.on("welcome", (data) => {
     console.log(data);
   })
+
+  //socket.on("newJoin")
 
   return (
     <NativeRouter>

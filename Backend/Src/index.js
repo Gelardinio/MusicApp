@@ -6,7 +6,7 @@ const pool = require("./Database/db");
 const backend = express();
 
 const httpServer = require("http").createServer(backend);
-const io = require("socket.io")(httpServer);
+const io = require("./Middleware/socket.js").init(httpServer)
 
 require('dotenv').config();
 

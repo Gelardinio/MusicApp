@@ -15,8 +15,8 @@ create table activeUsers (
 	username VARCHAR(40) NOT NULL,
 	song_id VARCHAR(40) NOT NULL,
 	CONSTRAINT fk_User
-	FOREIGN KEY(user)
-	REFERENCES user(id)
+	FOREIGN KEY(person)
+	REFERENCES person(id)
 );
 
 

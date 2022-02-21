@@ -16,12 +16,11 @@ const styles = StyleSheet.create({
     },
 });
 
-
 const Login = (props) => {
     const [username, onChangeUsername] = React.useState("");
     const [password, onChangePassword] = React.useState("");
     const navigate = useNavigate();
-
+    
     const determinePage = async () => {
         const navigate = useNavigate();
         const res = await SecureStore.getItemAsync("bearer")
@@ -29,10 +28,10 @@ const Login = (props) => {
             try {
                 global.username = jwtDecode(res).username;
                 global.id = jwtDecode(res).id;
+                navigate('/mainPage');
             } catch (e) {
                 console.log(e);
             }
-            navigate('/mainPage');
         }
     }
 
