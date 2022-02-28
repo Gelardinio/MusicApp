@@ -25,6 +25,9 @@ const PORT = process.env.PORT;
 io.on('connection', (socket) => {
     console.log("bruh")
     socket.emit("welcome", "Connected to socket!");
+    socket.on("joinID", (data) => {
+        socket.emit("newJoin", data);
+    })
 });
 
 io.on('connect_failed', function(){

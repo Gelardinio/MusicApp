@@ -6,8 +6,7 @@ import InputField from './InputField';
 import * as SecureStore from 'expo-secure-store';
 import { useNavigate } from "react-router-native";
 import global from '../../global'
-
-const jwtDecode = require('jwt-decode');
+import jwtDecode from "jwt-decode";
 
 const styles = StyleSheet.create({
     titleText: {
@@ -26,8 +25,8 @@ const Login = (props) => {
         const res = await SecureStore.getItemAsync("bearer")
         if (res) {
             try {
-                global.username = jwtDecode(res).username;
-                global.id = jwtDecode(res).id;
+                global.username = await jwtDecode(res).username;
+                global.id = await jwtDecode(res).id;
                 navigate('/mainPage');
             } catch (e) {
                 console.log(e);
@@ -35,6 +34,15 @@ const Login = (props) => {
         }
     }
 
+    /*React.useEffect(() => {
+        (async () => {
+            const res = await SecureStore.getItemAsync("bearer")
+            global.username = await jwtDecode(res).username;
+            global.id = jwtDecode(res).id;
+            navigate('/mainPage');
+        })();
+    }, []);*/
+    
     determinePage();
 
     async function saveJWT(key, value) {

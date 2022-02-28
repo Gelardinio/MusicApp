@@ -9,7 +9,7 @@ import AuthLogin from "./AuthLogin";
 import { makeRedirectUri } from 'expo-auth-session';
 import * as SecureStore from 'expo-secure-store';
 import axios from 'axios';
-
+import { SocketContext } from '../Functions/socket';
 
 const styles = StyleSheet.create({
     container: {
@@ -31,6 +31,18 @@ const MainMap = () => {
     const [latitude, setLatitude] = React.useState(0);
     const [profile, setProfile] = React.useState("//");
     const [play, setPlay] = React.useState("");
+
+    const socket = React.useContext(SocketContext);
+
+    React.useEffect(() => {
+      socket.on("newJoin", (data) => {
+        console.log("There is a new join:" + data)
+        //Fetch dtaa from server 
+      });
+      socket.on("welcome", (data) => {
+        socket.emit("joinID", global.id)
+      })
+    }, []);
 
     const getUsername = async (token) => {
       await axios.get("https://api.spotify.com/v1/me", {headers: {'Authorization': `Bearer ${token}`}})
