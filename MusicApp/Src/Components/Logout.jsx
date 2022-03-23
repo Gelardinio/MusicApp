@@ -11,13 +11,17 @@ const styles = StyleSheet.create({
     },
 });
 
-
 const Logout = (props) => {
 
     const navigate = useNavigate();
 
     const handleLogout = async () => {
-        const res = await SecureStore.deleteItemAsync("bearer")
+        try {
+            await SecureStore.deleteItemAsync("bearer")
+            await SecureStore.deleteItemAsync("token")
+        } catch (e) {
+            console.log("Error logging out")
+        }
         navigate('/');
     };
 

@@ -24,10 +24,11 @@ async function genActiveTable() {
     try {
         const userTable = await pool.query(
             `CREATE TABLE activeUsers (
-                id BIGSERIAL NOT NULL PRIMARY KEY,
+                id BIGSERIAL NOT NULL,
                 username VARCHAR(40) NOT NULL,
                 song_id VARCHAR(40) NOT NULL,
-                CONSTRAINT fk_Person FOREIGN KEY(id)
+                CONSTRAINT fk_User
+                FOREIGN KEY(id)
                 REFERENCES person(id)
             )`
         )

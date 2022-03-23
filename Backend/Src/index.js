@@ -1,6 +1,7 @@
 const login = require("./Routes/login");
 const signup = require("./Routes/signup");
 const insertPerson = require("./Routes/insertPerson");
+const getPerson = require("./Routes/getPerson");
 const express = require('express');
 const pool = require("./Database/db");
 const backend = express();
@@ -19,6 +20,7 @@ backend.get('/', (req, res) => {
 backend.post('/api/v1/login', login);
 backend.post('/api/v1/signup', signup);
 backend.post('/api/v1/insertPerson', insertPerson);
+backend.post('/api/v1/getPerson', getPerson);
 
 const PORT = process.env.PORT;
 

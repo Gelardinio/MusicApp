@@ -7,24 +7,18 @@ require('dotenv').config();
 module.exports = async (req , res) => {
 
     try {
-        const {userId, spotifyId, longitude, latitude} = req.body;
+        const {id, username, song_id} = req.body;
 
-        const username = await pool.query(
-            `SELECT * FROM person WHERE id = '${userId}' FETCH FIRST 1 ROWS ONLY`
+        console.log(id)
+
+        const foundUser = await pool.query(
+            `SELECT * FROM person WHERE id = '${id}' FETCH FIRST 1 ROWS ONLY`
         )
 
-        const id = await pool.query(
-            `INSERT INTO activeUsers (username, song_id, id) values 
-            ('${username}', '${spotifyId}', '${userId}') RETURNING id`
+        await pool.query(
+            `INSERT INTO activeUsers (id, username, song_id) values 
+            ('${id}', '${username}', '${song_id}') RETURNING id`
         )
-
-        const io = require('../Middleware/socket').getSocket();
-
-        data = {id, longitude, latitude};
-
-        io.emit("newJoin", data);
-
-        res.json({"bruh" : "bdk"})
 
     } catch (err) {
         console.log(err.message);

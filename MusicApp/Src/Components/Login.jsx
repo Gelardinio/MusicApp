@@ -21,12 +21,12 @@ const Login = (props) => {
     const navigate = useNavigate();
     
     const determinePage = async () => {
-        const navigate = useNavigate();
         const res = await SecureStore.getItemAsync("bearer")
         if (res) {
             try {
                 global.username = await jwtDecode(res).username;
                 global.id = await jwtDecode(res).id;
+                console.log(global.id)
                 navigate('/mainPage');
             } catch (e) {
                 console.log(e);
@@ -34,23 +34,19 @@ const Login = (props) => {
         }
     }
 
-    /*React.useEffect(() => {
+    React.useEffect(() => {
         (async () => {
-            const res = await SecureStore.getItemAsync("bearer")
-            global.username = await jwtDecode(res).username;
-            global.id = jwtDecode(res).id;
-            navigate('/mainPage');
+            await determinePage();
         })();
-    }, []);*/
+    }, []);
     
-    determinePage();
 
     async function saveJWT(key, value) {
         await SecureStore.setItemAsync(key, value);
     }
 
     const handleLogin = async (username, password) => {
-        await axios.post("http://localhost:3001/api/v1/login", {"username": `${username}`,"password": `${password}`})
+        await axios.post("http://192.168.2.82:3001/api/v1/login", {"username": `${username}`,"password": `${password}`})
             .then ( res => {
                 global.username = username;
                 saveJWT("bearer", res.data)
@@ -58,7 +54,6 @@ const Login = (props) => {
                         console.log(err)
                     })
                 determinePage();
-                //navigate('/mainPage');
             })
             .catch(function (err) {
                 console.log(err)

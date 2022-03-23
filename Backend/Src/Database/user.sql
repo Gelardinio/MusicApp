@@ -11,7 +11,6 @@ create table user (
 );
 
 create table activeUsers (
-	id BIGSERIAL NOT NULL PRIMARY KEY,
 	username VARCHAR(40) NOT NULL,
 	song_id VARCHAR(40) NOT NULL,
 	CONSTRAINT fk_User

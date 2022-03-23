@@ -31,13 +31,27 @@ const MainMap = () => {
     const [latitude, setLatitude] = React.useState(0);
     const [profile, setProfile] = React.useState("//");
     const [play, setPlay] = React.useState("");
+    const [songId, setSongId] = React.useState("not listening");
+    const [newLongitude, setNewLongitude] = React.useState([]);
+    const [newLatitude, setNewLatitude] = React.useState([]);
+    const [associatedId, setAssociatedId] = React.useState([]);
 
     const socket = React.useContext(SocketContext);
 
+    const getUser = async (id) => {
+      await axios.post("http://localhost:3001/api/v1/login", {"id": `${id}`})
+          .then ( res => {
+              return res
+          })
+          .catch(function (err) {
+              console.log(err)
+          }) 
+      };
+
     React.useEffect(() => {
       socket.on("newJoin", (data) => {
-        console.log("There is a new join:" + data)
-        //Fetch dtaa from server 
+        console.log("There is a new join: " + data)
+        const newUser = getUser(data);
       });
       socket.on("welcome", (data) => {
         socket.emit("joinID", global.id)
@@ -47,24 +61,25 @@ const MainMap = () => {
     const getUsername = async (token) => {
       await axios.get("https://api.spotify.com/v1/me", {headers: {'Authorization': `Bearer ${token}`}})
           .then ( res => {
-              console.log(res.data.images[0].url)
-              setProfile(res.data.images[2].url)
+              //console.log(res.data.images[0].url)
+              //console.log(res)
               global.spotifyUsername = res.data.display_name
+              //setProfile(res.data.images[2].url)
           })
           .catch(function (err) {
-              console.log("ERROR" + err)
+              console.log("Old Token Probably ", err)
           }) 
       };
 
     const getCurrPlaying = async (token) => {
       await axios.get("https://api.spotify.com/v1/me/player/currently-playing", {headers: {'Authorization': `Bearer ${token}`}})
           .then ( res => {
-            //console.log("bruh")
             setProfile(res.data.item.album.images[0].url)
             setPlay((res.data.item.name).substring(0, 15))
+            setSongId(res.data.item.id)
           })
           .catch(function (err) {
-
+            console.log(err)
           }) 
       };
 
@@ -89,7 +104,7 @@ const MainMap = () => {
                 try {
                     await getCurrPlaying(res)
                 } catch (e) {
-
+                  console.log(e)
                 }
             }
           })();
@@ -108,12 +123,13 @@ const MainMap = () => {
         if (location) {
           setLatitude(location.coords.latitude)
           setLongitude(location.coords.longitude)
-          await axios.post("http://localhost:3001/api/v1/insertPerson", {'userId': 1, 'spotifyId': `asdf`, 'longitude': `${longitude}`, 'latitude': `${latitude}`})
+          console.log(global.spotifyUsername)
+          await axios.post("http://192.168.2.82:3001/api/v1/insertPerson", {'id': `${global.id}`, 'username': `${global.spotifyUsername}`, 'song_id': `${songId}`})
             .then ( res => {
                 console.log("SENT")
             })
             .catch(function (err) {
-              console.log("NO")
+              console.log("ERROR")
             }) 
         }
       })();
@@ -123,10 +139,10 @@ const MainMap = () => {
         <>
             <MapView style={styles.map}>
                 <MapMarker longitude={longitude} latitude={latitude} username={global.username} imPath={{uri: profile}} playing={play}></MapMarker>
+                <Logout />
+                <Logout />
             </MapView>
             <AuthLogin />
-            <Logout />
-            
         </>
     )
 };

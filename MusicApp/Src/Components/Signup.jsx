@@ -34,7 +34,6 @@ const SignUp = (props) => {
         onChangeDate(currentDate);
     };
     
-
     const onPress = () =>
         ActionSheetIOS.showActionSheetWithOptions(
             {
@@ -76,10 +75,8 @@ const SignUp = (props) => {
         payLoad["gender"] = gender
         payLoad["dateOfBirth"] = dateOfBirth
         payLoad["country"] = country
-
-        console.log(username)
         
-        await axios.post("http://localhost:3001/api/v1/signup", payLoad)
+        await axios.post("http://192.168.2.82:3001/api/v1/signup", payLoad)
             .then ( res => {
                 console.log(res.data)
                 navigate('/');
