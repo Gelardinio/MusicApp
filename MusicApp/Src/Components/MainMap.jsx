@@ -103,6 +103,14 @@ const MainMap = () => {
             if (res) {
                 try {
                     await getCurrPlaying(res)
+                    //error here
+                    await axios.post("http://192.168.2.82:3001/api/v1/insertPerson", {'id': `${global.id}`, 'username': `${global.spotifyUsername}`, 'song_id': `${songId}`})
+                    .then ( res => {
+                        console.log("SENT")
+                    })
+                    .catch(function (err) {
+                      console.log("ERROR")
+                    }) 
                 } catch (e) {
                   console.log(e)
                 }
@@ -123,14 +131,6 @@ const MainMap = () => {
         if (location) {
           setLatitude(location.coords.latitude)
           setLongitude(location.coords.longitude)
-          console.log(global.spotifyUsername)
-          await axios.post("http://192.168.2.82:3001/api/v1/insertPerson", {'id': `${global.id}`, 'username': `${global.spotifyUsername}`, 'song_id': `${songId}`})
-            .then ( res => {
-                console.log("SENT")
-            })
-            .catch(function (err) {
-              console.log("ERROR")
-            }) 
         }
       })();
     }, []);

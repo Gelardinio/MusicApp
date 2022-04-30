@@ -7,7 +7,7 @@ require('dotenv').config();
 module.exports = async (req , res) => {
 
     try {
-        const {id, username, song_id} = req.body;
+        let {id, username, song_id} = req.body;
 
         console.log(id)
 
@@ -15,9 +15,11 @@ module.exports = async (req , res) => {
             `SELECT * FROM person WHERE id = '${id}' FETCH FIRST 1 ROWS ONLY`
         )
 
+        song_id = "bruh"
+
         await pool.query(
-            `INSERT INTO activeUsers (id, username, song_id) values 
-            ('${id}', '${username}', '${song_id}') RETURNING id`
+            `INSERT INTO activeUsers (id, username, song_id) VALUES 
+            ('${id}', '${username}', '${song_id}') ON CONFLICT (id) DO UPDATE SET song_id =  EXCLUDED.song_id username = EXCLUDED.username`
         )
 
     } catch (err) {
