@@ -26,7 +26,6 @@ module.exports = async (req , res) => {
             throw new Error("Error!")           
         }
 
-        //Need to test ID thing
         const token = await jwt.sign(
             {
                 username: exists.rows[0].username,

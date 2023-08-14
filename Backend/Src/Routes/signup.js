@@ -15,7 +15,6 @@ module.exports = async (req , res) => {
         console.log("Already exists!")
     } else {
         try {
-
             password = await bcrypt.hash(req.body.password, 12);
             
             await pool.query(

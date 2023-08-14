@@ -2,7 +2,6 @@ let io;
 module.exports = {
     init: function(server) {
         io = require("socket.io")(server);
-        console.log("bruh")
         return io;
     },
     getSocket: function() {
